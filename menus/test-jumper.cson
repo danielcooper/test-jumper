@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable test-jumper': 'test-jumper:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'test-jumper'
+      'submenu': [
+        { 'label': 'Jump', 'command': 'test-jumper:jump' }
+      ]
+    ]
+  }
+]
