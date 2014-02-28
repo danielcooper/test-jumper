@@ -1,15 +1,17 @@
 {
   "name": "test-jumper",
   "main": "./lib/test-jumper",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Jump between your unit test and your code with a single hotkey",
-  "activationEvents": ["test-jumper:toggle", "test-jumper:jump"],
+  "activationEvents": [
+    "test-jumper:toggle",
+    "test-jumper:jump"
+  ],
   "repository": "https://github.com/danielcooper/test-jumper",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
