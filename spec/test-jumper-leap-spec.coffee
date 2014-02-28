@@ -24,7 +24,7 @@ describe "TestJumperLeap", ->
 
 
   it "knows if the current file is a spec", =>
-`
+
     spyOn(@leaper, "getCurrentFilePath").andCallFake ->
       '/object-spec.js.coffee'
 

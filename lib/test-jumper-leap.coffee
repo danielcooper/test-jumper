@@ -26,8 +26,6 @@ module.exports =
         openthis = t.replace(filename, target_filename)
         openthis = atom.project.getRootDirectory().path + "/" + openthis
 
-        console.log(openthis)
-
         if FS.existsSync openthis
             atom.workspace.open(openthis)
 
@@ -45,8 +43,6 @@ module.exports =
 
       targets = atom.config.get('test-jumper.locations').map (location) ->
         location.split('|')
-
-    #  console.log(targets)
 
       if @currentPathIsSpec()
         return targets.map (t) ->
