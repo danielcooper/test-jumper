@@ -5,7 +5,7 @@
   "private": true,
   "description": "Jump between your unit test and your code with a single hotkey",
   "activationEvents": ["test-jumper:toggle", "test-jumper:jump"],
-  "repository": "https://github.com/atom/test-jumper",
+  "repository": "https://github.com/danielcooper/test-jumper",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
