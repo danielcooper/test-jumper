@@ -29,8 +29,6 @@ module.exports =
         if FS.existsSync openthis
             atom.workspace.open(openthis)
 
-    moveToFilePath: ->
-      @currentPathIsSpec()
 
     getMovementTarget: ->
       replace_targets = @getMovementRules().filter (r) =>
@@ -40,7 +38,6 @@ module.exports =
         [@getCurrentFilePath(), @getCurrentFilePath().replace (new RegExp("^#{target[0]}")), target[1]]
 
     getMovementRules: ->
-
       targets = atom.config.get('test-jumper.locations').map (location) ->
         location.split('|')
 
