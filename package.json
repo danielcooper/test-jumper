@@ -1,7 +1,7 @@
 {
   "name": "test-jumper",
   "main": "./lib/test-jumper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Jump between your unit test and your code with a single hotkey",
   "activationEvents": [
