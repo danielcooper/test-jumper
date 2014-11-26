@@ -2,7 +2,7 @@ TestJumperLeap = require './test-jumper-leap'
 
 module.exports =
 
-  configDefaults:
+  config:
     'locations':
       type: 'array'
       default: [
