@@ -1,7 +1,5 @@
 TestJumper = require '../lib/test-jumper'
 TestJumperLeap = require '../lib/test-jumper-leap'
-{WorkspaceView} = require 'atom'
-
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
@@ -12,31 +10,25 @@ describe "TestJumperLeap", ->
   activationPromise = null
 
   beforeEach =>
-    atom.workspaceView = new WorkspaceView
+    spyOn(atom.config, "get").andCallFake (prop) ->
+      prop = prop.replace('test-jumper.','')
+      TestJumper.config[prop].default
+
     @leaper = new TestJumperLeap
 
 
   it "is able to get the placement target for a bit of code", =>
-    spyOn(@leaper, "getCurrentFilePath").andCallFake ->
-      'lib/object.js.coffee'
-
-    expect(@leaper.getMovementTarget()[0][0]).toBe('lib/object.js.coffee')
+    expect(@leaper.getMovementTargetForFilePath('lib/object.js.coffee')[0][0]).toBe('lib/object.js.coffee')
 
 
   it "knows if the current file is a spec", =>
 
-    spyOn(@leaper, "getCurrentFilePath").andCallFake ->
-      '/object-spec.js.coffee'
-
-    expect(@leaper.currentPathIsSpec()).toBe(true);
+    expect(@leaper.filenameIsSpec('/object-spec.js.coffee')).toBe(true);
 
 
-  it "knows if the current file is nt a spec", =>
+  it "knows if the current file is not a spec", =>
 
-    spyOn(@leaper, "getCurrentFilePath").andCallFake ->
-      '/object.js.coffee'
-
-    expect(@leaper.currentPathIsSpec()).toBe(false);
+    expect(@leaper.filenameIsSpec('/object.js.coffee')).toBe(false);
 
 
   describe '@_format', ->
@@ -123,3 +115,17 @@ describe "TestJumperLeap", ->
     it 'works without the %s within the format string', ->
       test = TestJumperLeap._matchFormat('-spec','foo-spec')
       expect(test).toBe(true)
+
+  describe '@_extensionFreeBasename', ->
+
+    it 'works with one extension', ->
+      name = TestJumperLeap._extensionFreeBasename('lib/blubber.xyz')
+      expect(name).toBe('blubber')
+
+    it 'works with several extensions', ->
+      name = TestJumperLeap._extensionFreeBasename('specs/modules/foo.js.xyz')
+      expect(name).toBe('foo')
+
+    it 'works without extensions', ->
+      name = TestJumperLeap._extensionFreeBasename('src/bar')
+      expect(name).toBe('bar')

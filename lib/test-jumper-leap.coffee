@@ -13,6 +13,8 @@ module.exports =
     filenameIsSpec: (filename) ->
       spec_announcer = atom.config.get('test-jumper.spec-announcer')
 
+      filename = @constructor._extensionFreeBasename(filename)
+
       @constructor._matchFormat(spec_announcer,filename)
 
     leap: ->
@@ -20,7 +22,7 @@ module.exports =
 
       spec_announcer = atom.config.get('test-jumper.spec-announcer')
       currentFilePath = @getCurrentFilePath()
-      filename = PATH.basename(currentFilePath)
+      filename = @constructor._extensionFreeBasename(currentFilePath)
 
       for target in @getMovementTargetForFilePath(currentFilePath)
         if @filenameIsSpec(filename)
@@ -48,9 +50,7 @@ module.exports =
       targets = atom.config.get('test-jumper.locations').map (location) ->
         location.split('|')
 
-      filename = PATH.basename(filePath)
-
-      if @filenameIsSpec(filename)
+      if @filenameIsSpec(filePath)
         return targets.map (t) ->
           [t[1],t[0]]
       else
@@ -75,3 +75,7 @@ module.exports =
     # Only supports one '%s'
     @_matchFormat: (format, formatted_string) ->
       return @_unformat(format, formatted_string) != formatted_string
+
+    @_extensionFreeBasename: (file_path) ->
+      file_name = PATH.basename(file_path)
+      return file_name.replace(/^([^\.]+).*$/,'$1')
