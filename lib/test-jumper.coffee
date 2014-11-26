@@ -4,6 +4,8 @@ module.exports =
 
   config:
     'locations':
+      title: 'Source and Test Locations'
+      description: 'A comma-separated list of source-/test-directory pairs. Each pair is separated by a pipe (|) symbol.'
       type: 'array'
       default: [
          'lib|spec'
@@ -12,11 +14,15 @@ module.exports =
       items:
         type: 'string'
     'spec-announcer':
+      title: 'Test-Filename'
+      description: 'The name of the testfile, whereas "%s" gets replaced by the original filename.'
       type: 'string'
       default: '%s-spec'
 
+
   activate: (state) ->
-    atom.workspaceView.command "test-jumper:jump", => @jump()
+    atom.commands.add 'atom-text-editor',
+      "test-jumper:jump", => @jump()
 
   jump: ->
     leaper = new TestJumperLeap
