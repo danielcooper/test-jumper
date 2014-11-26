@@ -25,7 +25,8 @@ module.exports =
       filename = @constructor._extensionFreeBasename(currentFilePath)
 
       for target in @getMovementTargetForFilePath(currentFilePath)
-        if @filenameIsSpec(filename)
+        is_spec = @filenameIsSpec(filename)
+        if is_spec
           target_filename = @constructor._unformat(spec_announcer,filename)
         else
           target_filename = @constructor._format(spec_announcer,filename)
@@ -35,6 +36,15 @@ module.exports =
         openthis = PATH.join(atom.project.getRootDirectory().path,openthis)
 
         if FS.existsSync openthis
+          atom.workspace.open(openthis)
+
+        else if atom.config.get('test-jumper.x-create-files.enabled')
+          src_filename = if is_spec
+            PATH.basename(openthis)
+          else
+            PATH.basename(target[0])
+
+          @createFile(openthis,src_filename,! is_spec)
           atom.workspace.open(openthis)
 
 
@@ -56,6 +66,24 @@ module.exports =
       else
         return targets
 
+    createFile: (openthis, src_filename, target_is_spec) ->
+      @mkParentDirs openthis
+
+      content = if target_is_spec
+        atom.config.get('test-jumper.x-create-files.spec-template')
+      else
+        atom.config.get('test-jumper.x-create-files.source-template')
+      content = content.split('%s').join(src_filename)
+      content = content.split('\\n').join('\n')
+
+      FS.writeFileSync(openthis,content)
+
+    # Recursively creates all required parent directories
+    mkParentDirs: (path) ->
+      parent = PATH.dirname(path)
+      return if FS.existsSync parent
+      @mkParentDirs parent
+      FS.mkdirSync parent
 
     # A very simple implementation of UTIL.format
     # Only supports one '%s'
