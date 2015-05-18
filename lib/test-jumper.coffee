@@ -18,6 +18,10 @@ module.exports =
       description: 'The name of the testfile, whereas "%s" gets replaced by the original filename.'
       type: 'string'
       default: '%s-spec'
+    'spec_to_the_right':
+      title: "Check this if you want opening a spec to pop open a panel to the right."
+      type: 'boolean'
+      default: 'false'
     'x-create-files':
       type: 'object'
       properties:

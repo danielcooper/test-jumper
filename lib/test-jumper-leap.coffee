@@ -36,7 +36,15 @@ module.exports =
         openthis = PATH.join(atom.project.getRootDirectory().path,openthis)
 
         if FS.existsSync openthis
-          atom.workspace.open(openthis)
+          split_side = if is_spec
+            'left'
+          else
+            'right'
+
+          open_options =
+            searchAllPanes: true
+          open_options['split'] = split_side if atom.config.get('test-jumper.spec_to_the_right')
+          atom.workspace.open(openthis, open_options)
 
         else if atom.config.get('test-jumper.x-create-files.enabled')
           src_filename = if is_spec
