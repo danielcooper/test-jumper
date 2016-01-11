@@ -7,8 +7,23 @@ module.exports =
 
     constructor: ->
 
+    getCurrentFileFullPath: ->
+      atom.workspace.getActivePaneItem().getURI()
+
     getCurrentFilePath: ->
-      atom.project.relativize(atom.workspace.getActivePaneItem().getURI())
+      atom.project.relativize(@getCurrentFileFullPath())
+
+    getCurrentProjectPath: ->
+      file = @getCurrentFilePath()
+      filePath = @getCurrentFileFullPath()
+      currentProjectPath = atom.project.getDirectories()[0].path
+
+      for project in atom.project.getDirectories()
+        projectFilePath = PATH.join(project.path, file)
+        if (projectFilePath == filePath)
+          currentProjectPath = project.path
+
+      return currentProjectPath
 
     filenameIsSpec: (filename) ->
       spec_announcer = atom.config.get('test-jumper.spec-announcer')
@@ -33,7 +48,7 @@ module.exports =
 
         t = target[1]
         openthis = t.replace(filename, target_filename)
-        openthis = PATH.join(atom.project.getDirectories()[0].path,openthis)
+        openthis = PATH.join(@getCurrentProjectPath(),openthis)
 
         if FS.existsSync openthis
           split_side = if is_spec
