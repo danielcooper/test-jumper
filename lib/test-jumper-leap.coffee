@@ -47,8 +47,9 @@ module.exports =
           target_filename = @constructor._format(spec_announcer,filename)
 
         t = target[1]
-        openthis = t.replace(filename, target_filename)
-        openthis = PATH.join(@getCurrentProjectPath(),openthis)
+        new_directory = PATH.dirname(t)
+        new_filename = PATH.basename(currentFilePath).replace(filename, target_filename)
+        openthis = PATH.join(@getCurrentProjectPath(), new_directory, new_filename)
 
         if FS.existsSync openthis
           split_side = if is_spec
