@@ -12,7 +12,12 @@ describe "TestJumperLeap", ->
   beforeEach =>
     spyOn(atom.config, "get").andCallFake (prop) ->
       prop = prop.replace('test-jumper.','')
-      TestJumper.config[prop].default
+
+      if prop of TestJumper.config and 'default' of TestJumper.config[prop]
+        TestJumper.config[prop].default
+
+      else
+        atom.config[prop]
 
     @leaper = new TestJumperLeap
 
