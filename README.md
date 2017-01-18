@@ -1,5 +1,7 @@
 # test-jumper for Atom
 
+[![CircleCI](https://circleci.com/gh/danielcooper/test-jumper/tree/master.svg?style=svg)](https://circleci.com/gh/danielcooper/test-jumper/tree/master)
+
 Flick between your unit tests and your code with a hotkey [cmd-ctrl-.]
 
 By default test jumper will work for projects where specs are defined by appending `-spec` to the end of a file and code is in either app/ or lib/. You can change this in the settings.
