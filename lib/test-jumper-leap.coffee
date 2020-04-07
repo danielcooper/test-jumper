@@ -26,25 +26,24 @@ module.exports =
       return currentProjectPath
 
     filenameIsSpec: (filename) ->
-      spec_announcer = atom.config.get('test-jumper.spec-announcer')
-
-      filename = @constructor._extensionFreeBasename(filename)
-
-      @constructor._matchFormat(spec_announcer,filename)
+      spec_identifier = atom.config.get('test-jumper.test_identifier', scope: @config_descriptor)
+      PATH.basename(filename).match(spec_identifier)
 
     leap: ->
-      return unless atom.workspace.getActiveTextEditor()
+      console.log("jumping")
+      @editor = atom.workspace.getActiveTextEditor()
+      @config_descriptor = @editor.getRootScopeDescriptor()
+      return unless atom.workspace.getActivePaneItem()
+      test_template = atom.config.get(@config_descriptor, 'test-jumper.test_template')
 
-      spec_announcer = atom.config.get('test-jumper.spec-announcer')
       currentFilePath = @getCurrentFilePath()
-      filename = @constructor._extensionFreeBasename(currentFilePath)
-
+      filename = PATH.basename(currentFilePath)
       for target in @getMovementTargetForFilePath(currentFilePath)
         is_spec = @filenameIsSpec(filename)
         if is_spec
-          target_filename = @constructor._unformat(spec_announcer,filename)
+          target_filename = @spec_to_src(filename)
         else
-          target_filename = @constructor._format(spec_announcer,filename)
+          target_filename = @src_to_spec(filename)
 
         t = target[1]
         new_directory = PATH.dirname(t)
@@ -81,9 +80,8 @@ module.exports =
         [filePath, filePath.replace (new RegExp("^#{target[0]}")), target[1]]
 
     getMovementRulesForFilePath: (filePath) ->
-      targets = atom.config.get('test-jumper.locations').map (location) ->
-        location.split('|')
-
+      targets = atom.config.get('test-jumper.path_pairs', scope: @config_descriptor)
+      return [] unless targets
       if @filenameIsSpec(filePath)
         return targets.map (t) ->
           [t[1],t[0]]
@@ -109,25 +107,17 @@ module.exports =
       @mkParentDirs parent
       FS.mkdirSync parent
 
-    # A very simple implementation of UTIL.format
-    # Only supports one '%s'
-    @_format: (format, replacement) ->
-      replaced_string = format.replace(/^(.*)%s(.*)$/,"$1#{replacement}$2")
-      replaced_string = replacement + format if format == replaced_string # legacy support
-      return replaced_string
+    spec_to_src:(filename) ->
+       r = new RegExp(atom.config.get('test-jumper.test_matcher', scope: @config_descriptor))
+       t = atom.config.get('test-jumper.source_template', scope: @config_descriptor)
+       @template_replace(r,t,filename)
 
-    # The inverse of @_format
-    # Only supports one '%s'
-    @_unformat: (format, formatted_string) ->
-      format_parts = format.split(/%s/)
-      format_parts.unshift '' if format_parts.length == 1 # legacy support
-      formatted_string.replace(new RegExp("^#{format_parts[0]}(.*)#{format_parts[1]}$"),'$1')
+    src_to_spec:(filename) ->
+       r = new RegExp(atom.config.get('test-jumper.source_matcher', scope: @config_descriptor))
+       t = atom.config.get('test-jumper.test_template', scope: @config_descriptor)
+       @template_replace(r,t,filename)
 
-    # returns true if the formatted_string was created using format
-    # Only supports one '%s'
-    @_matchFormat: (format, formatted_string) ->
-      return @_unformat(format, formatted_string) != formatted_string
-
-    @_extensionFreeBasename: (file_path) ->
-      file_name = PATH.basename(file_path)
-      return file_name.replace(/^([^\.]+).*$/,'$1')
+    template_replace: (regex, target, filename) ->
+      for match in regex.exec(filename)[1..-1]
+        target = target.replace("{}", match);
+      return target

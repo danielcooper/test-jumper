@@ -1,0 +1,35 @@
+'.source.coffee':
+    "test-jumper":
+      path_pairs: [
+        ['lib', 'spec']
+      ]
+      test_template: "{}-spec.coffee"
+      test_matcher: "(.*)-spec.coffee"
+      source_template: "{}.coffee"
+      source_matcher: "(.*).coffee"
+      test_identifier: ".*-spec.coffee"
+
+'.source.ruby':
+    "test-jumper":
+      path_pairs: [
+        ['lib', 'spec'],
+        ['app', 'spec'],
+        ['lib', 'test'],
+        ['app', 'test']
+      ]
+      test_template: "{}_spec.rb"
+      test_matcher: "(.*)_spec.rb"
+      source_template: "{}.rb"
+      source_matcher: "(.*).rb"
+      test_identifier: ".*_spec.rb"
+
+'.source.elixir':
+    "test-jumper":
+      path_pairs: [
+        ['lib', 'test']
+      ]
+      test_template: "{}_test.exs"
+      test_matcher: "(.*)_test.exs"
+      source_template: "{}.ex"
+      source_matcher: "(.*).ex"
+      test_identifier: ".*_test.exs"
