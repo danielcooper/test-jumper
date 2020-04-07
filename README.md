@@ -14,7 +14,7 @@ By default this ships with mappings for:
 - Elixir
 - CoffeeScript
 
-If you want to add your own bindings add a entry in your atom config like so:
+If you want to add your own bindings add an entry in your atom config like so:
 
 ```cson
 '.source.elixir':
@@ -30,6 +30,11 @@ If you want to add your own bindings add a entry in your atom config like so:
 ```
 
 `path_pairs`: An array of tuples specifying how directories map between src and your test files
+
 `test_template`: Each match in the `test_matcher` will replace `{}`
+
 `test_matcher`: A regex capturing the key parts of your test file to use to find the src name.
+
 `test_identifier`: A regex identifying a test file
+
+Better yet, why not open a PR with your changes?
